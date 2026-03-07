@@ -194,7 +194,7 @@ function renderTabs() {
 
       html += `
         <div class="tab-item ${isActive} ${isSelected}" data-index="${tab.filteredIndex}" data-tab-id="${tab.id}" data-window-id="${tab.windowId}">
-          <img class="tab-icon" src="${favicon}" alt="" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%93%84%3C%2Ftext%3E%3C%2Fsvg%3E'">
+          <img class="tab-icon" src="${favicon}" alt="" data-fallback="true">
           <div class="tab-content">
             <div class="tab-title">${highlightText(tab.title, query)}</div>
             <div class="tab-url">${highlightText(tab.url, query)}</div>
@@ -212,6 +212,13 @@ function renderTabs() {
   });
 
   tabList.innerHTML = html;
+
+  // Add error handlers for images (CSP compliant)
+  document.querySelectorAll('.tab-icon[data-fallback="true"]').forEach(img => {
+    img.addEventListener('error', function() {
+      this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📄%3C/text%3E%3C/svg%3E";
+    });
+  });
 
   // Add click handlers
   document.querySelectorAll('.tab-item').forEach(item => {
