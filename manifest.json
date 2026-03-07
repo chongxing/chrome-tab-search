@@ -5,7 +5,8 @@
   "description": "Quickly search and jump to any tab across all windows",
   "permissions": [
     "tabs",
-    "activeTab"
+    "activeTab",
+    "windows"
   ],
   "action": {
     "default_popup": "popup.html",

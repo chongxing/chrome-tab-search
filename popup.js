@@ -20,43 +20,42 @@ async function init() {
 // Load all tabs from all windows
 async function loadAllTabs() {
   try {
-    // Use chrome.tabs.query() instead of chrome.windows.getAll()
-    // This returns all tabs from all windows with just 'tabs' permission!
-    const tabs = await chrome.tabs.query({});
-    console.log('Loaded tabs:', tabs.length);
+    // Get all windows with their titles (for custom window names)
+    const windows = await chrome.windows.getAll({ populate: true });
+    console.log('Loaded windows:', windows.length);
     
     allTabs = [];
     windowsMap.clear();
     
-    // Build windows map from tab data
-    const windowIds = [...new Set(tabs.map(t => t.windowId))];
-    console.log('Found windows:', windowIds.length, '- IDs:', windowIds);
-    
     // Get current window for sorting
     const currentWindow = await chrome.windows.getCurrent();
     
-    windowIds.forEach((windowId, index) => {
-      const windowTabs = tabs.filter(t => t.windowId === windowId);
-      const isFocused = windowId === currentWindow.id;
+    windows.forEach((window, index) => {
+      const isFocused = window.id === currentWindow.id;
       
-      // Get active tab title as window "name"
-      const activeTab = windowTabs.find(t => t.active);
-      const windowName = activeTab ? (activeTab.title || '未命名窗口') : '未命名窗口';
+      // Get custom window name if set by user, otherwise use active tab title
+      let windowName = window.title; // Chrome's native window name
+      if (!windowName || windowName === 'undefined') {
+        const activeTab = window.tabs?.find(t => t.active);
+        windowName = activeTab ? (activeTab.title || '未命名窗口') : '未命名窗口';
+      }
       
-      windowsMap.set(windowId, {
+      windowsMap.set(window.id, {
         index: index + 1,
         focused: isFocused,
-        tabCount: windowTabs.length,
+        tabCount: window.tabs?.length || 0,
         name: windowName
       });
       
-      windowTabs.forEach(tab => {
-        allTabs.push({
-          ...tab,
-          windowIndex: index + 1,
-          windowFocused: isFocused
+      if (window.tabs) {
+        window.tabs.forEach(tab => {
+          allTabs.push({
+            ...tab,
+            windowIndex: index + 1,
+            windowFocused: isFocused
+          });
         });
-      });
+      }
     });
 
     console.log('Total tabs loaded:', allTabs.length);
