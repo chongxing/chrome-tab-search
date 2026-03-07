@@ -20,7 +20,7 @@ async function init() {
 // Load all tabs from all windows
 async function loadAllTabs() {
   try {
-    // Get all windows with their titles (for custom window names)
+    // Get all windows with their tabs
     const windows = await chrome.windows.getAll({ populate: true });
     console.log('Loaded windows:', windows.length);
     
@@ -33,20 +33,9 @@ async function loadAllTabs() {
     windows.forEach((window, index) => {
       const isFocused = window.id === currentWindow.id;
       
-      // Debug: log window object to see available properties
-      console.log('Window object:', window);
-      console.log('Window title:', window.title);
-      
-      // Get custom window name if set by user, otherwise use active tab title
-      // Note: Chrome's "Name window" feature may not be accessible via API
-      let windowName = window.title || window.name;
-      console.log('Extracted windowName:', windowName);
-      
-      if (!windowName || windowName === 'undefined' || windowName === '') {
-        const activeTab = window.tabs?.find(t => t.active);
-        windowName = activeTab ? (activeTab.title || '未命名窗口') : '未命名窗口';
-        console.log('Fallback to active tab title:', windowName);
-      }
+      // Use active tab title as window name
+      const activeTab = window.tabs?.find(t => t.active);
+      const windowName = activeTab ? (activeTab.title || '未命名窗口') : '未命名窗口';
       
       windowsMap.set(window.id, {
         index: index + 1,
@@ -185,7 +174,7 @@ function renderTabs() {
       <div class="window-group">
         <div class="window-header ${isCurrentWindow ? 'current' : ''}">
           <span class="window-icon">${isCurrentWindow ? '🪟' : '📑'}</span>
-          <span title="${escapeHtml(windowInfo.name || '')}">窗口 ${windowInfo.name ? escapeHtml(windowInfo.name.substring(0, 35)) + (windowInfo.name.length > 35 ? '...' : '') : windowInfo.index} ${isCurrentWindow ? '(当前)' : ''}</span>
+          <span title="${escapeHtml(windowInfo.name || '')}">窗口 ${windowInfo.index}${windowInfo.name ? ' - ' + escapeHtml(windowInfo.name.substring(0, 30)) + (windowInfo.name.length > 30 ? '...' : '') : ''} ${isCurrentWindow ? '(当前)' : ''}</span>
           <span class="window-tabs-count">${tabs.length} 个Tab</span>
         </div>
         <div class="window-tabs">
