@@ -178,7 +178,7 @@ function renderTabs() {
       <div class="window-group">
         <div class="window-header ${isCurrentWindow ? 'current' : ''}">
           <span class="window-icon">${isCurrentWindow ? '🪟' : '📑'}</span>
-          <span title="${escapeHtml(windowInfo.name || '')}">窗口 ${windowInfo.index}${windowInfo.name ? ' - ' + escapeHtml(windowInfo.name.substring(0, 30)) + (windowInfo.name.length > 30 ? '...' : '') : ''} ${isCurrentWindow ? '(当前)' : ''}</span>
+          <span title="${escapeHtml(windowInfo.name || '')}">窗口 ${windowInfo.name ? escapeHtml(windowInfo.name.substring(0, 35)) + (windowInfo.name.length > 35 ? '...' : '') : windowInfo.index} ${isCurrentWindow ? '(当前)' : ''}</span>
           <span class="window-tabs-count">${tabs.length} 个Tab</span>
         </div>
         <div class="window-tabs">
