@@ -4,6 +4,7 @@ node_modules/
 .DS_Store
 *.zip
 *.tar.gz
+chrome-tab-search-store.zip
 test.html
 test-mock.html
 
