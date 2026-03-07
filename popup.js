@@ -33,11 +33,19 @@ async function loadAllTabs() {
     windows.forEach((window, index) => {
       const isFocused = window.id === currentWindow.id;
       
+      // Debug: log window object to see available properties
+      console.log('Window object:', window);
+      console.log('Window title:', window.title);
+      
       // Get custom window name if set by user, otherwise use active tab title
-      let windowName = window.title; // Chrome's native window name
-      if (!windowName || windowName === 'undefined') {
+      // Note: Chrome's "Name window" feature may not be accessible via API
+      let windowName = window.title || window.name;
+      console.log('Extracted windowName:', windowName);
+      
+      if (!windowName || windowName === 'undefined' || windowName === '') {
         const activeTab = window.tabs?.find(t => t.active);
         windowName = activeTab ? (activeTab.title || '未命名窗口') : '未命名窗口';
+        console.log('Fallback to active tab title:', windowName);
       }
       
       windowsMap.set(window.id, {
