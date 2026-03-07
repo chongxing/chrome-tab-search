@@ -39,10 +39,15 @@ async function loadAllTabs() {
       const windowTabs = tabs.filter(t => t.windowId === windowId);
       const isFocused = windowId === currentWindow.id;
       
+      // Get active tab title as window "name"
+      const activeTab = windowTabs.find(t => t.active);
+      const windowName = activeTab ? (activeTab.title || '未命名窗口') : '未命名窗口';
+      
       windowsMap.set(windowId, {
         index: index + 1,
         focused: isFocused,
-        tabCount: windowTabs.length
+        tabCount: windowTabs.length,
+        name: windowName
       });
       
       windowTabs.forEach(tab => {
@@ -173,7 +178,7 @@ function renderTabs() {
       <div class="window-group">
         <div class="window-header ${isCurrentWindow ? 'current' : ''}">
           <span class="window-icon">${isCurrentWindow ? '🪟' : '📑'}</span>
-          <span>窗口 ${windowInfo.index} ${isCurrentWindow ? '(当前)' : ''}</span>
+          <span>窗口 ${windowInfo.index}${windowInfo.name ? ' - ' + escapeHtml(windowInfo.name.substring(0, 25)) : ''} ${isCurrentWindow ? '(当前)' : ''}</span>
           <span class="window-tabs-count">${tabs.length} 个Tab</span>
         </div>
         <div class="window-tabs">
