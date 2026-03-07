@@ -1,4 +1,4 @@
-# Tab Search - 跨窗口 Tab 搜索插件
+# Tab Search - Cross Window
 
 一个 Chrome 浏览器扩展，帮助你在所有窗口中快速搜索并跳转到指定的 Tab。
 
@@ -17,14 +17,23 @@
 
 ## 📦 安装方法
 
-### 开发者模式安装
+### 方法一：直接下载安装（推荐，无需 Chrome Web Store）
 
-1. 下载本仓库代码
+1. 下载 [`chrome-tab-search-store.zip`](./chrome-tab-search-store.zip)
+2. 解压 ZIP 文件到任意文件夹
+3. 打开 Chrome 浏览器，访问 `chrome://extensions/`
+4. 开启右上角「**开发者模式**」（Developer mode）
+5. 点击「**加载已解压的扩展程序**」（Load unpacked）
+6. 选择解压后的文件夹
+7. 完成！插件图标会出现在浏览器工具栏
+
+### 方法二：开发者模式安装（使用源码）
+
+1. 克隆本仓库或下载源码
 2. 打开 Chrome 浏览器，访问 `chrome://extensions/`
 3. 开启右上角「**开发者模式**」
 4. 点击「**加载已解压的扩展程序**」
-5. 选择本仓库文件夹
-6. 插件图标会出现在浏览器工具栏
+5. 选择 `chrome-tab-search` 文件夹
 
 ### 固定到工具栏（推荐）
 
@@ -46,14 +55,17 @@
 
 ```
 chrome-tab-search/
-├── manifest.json      # 扩展配置
-├── popup.html         # 弹窗界面
-├── popup.js           # 核心逻辑
+├── manifest.json          # 扩展配置
+├── popup.html             # 弹窗界面
+├── popup.js               # 核心逻辑
+├── styles.css             # 界面样式
 ├── icons/
-│   ├── icon16.png     # 16x16 图标
-│   ├── icon48.png     # 48x48 图标
-│   └── icon128.png    # 128x128 图标
-└── README.md          # 本文件
+│   ├── icon-16.png        # 16x16 图标
+│   ├── icon-48.png        # 48x48 图标
+│   └── icon-128.png       # 128x128 图标
+├── chrome-tab-search-store.zip  # Chrome Web Store 发布包
+├── PRIVACY_POLICY.md      # 隐私政策
+└── README.md              # 本文件
 ```
 
 ## 🔒 权限说明
@@ -71,11 +83,20 @@ chrome-tab-search/
 2. 点击左侧「**键盘快捷键**」
 3. 找到「Tab Search」进行修改
 
+## 🔗 相关链接
+
+- **隐私政策**: [PRIVACY_POLICY.md](./PRIVACY_POLICY.md) | [在线查看](https://chongxing.github.io/chrome-tab-search/PRIVACY_POLICY.md)
+- **Chrome Web Store**: （审核通过后更新）
+
 ## 🛠️ 技术信息
 
 - Manifest V3 标准
 - 纯原生 JavaScript，无外部依赖
 - 轻量级设计，快速响应
+
+## 📸 截图
+
+![Tab Search 截图](./screenshot-1280x800.jpg)
 
 ---
 
