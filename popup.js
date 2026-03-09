@@ -87,14 +87,17 @@ async function loadAllTabs() {
       
       if (window.tabs) {
         window.tabs.forEach(tab => {
-          // Get timestamp for this tab, fallback to current time if not recorded
-          const timestamp = tabTimestamps[tab.id] || Date.now();
+          // Check if this tab has a recorded timestamp
+          const hasTimestamp = tabTimestamps.hasOwnProperty(tab.id);
+          // If no timestamp, use 0 (will be sorted to bottom)
+          const timestamp = hasTimestamp ? tabTimestamps[tab.id] : 0;
           
           allTabs.push({
             ...tab,
             windowIndex: index + 1,
             windowFocused: isFocused,
-            openTime: timestamp
+            openTime: timestamp,
+            hasTimestamp: hasTimestamp
           });
         });
       }
@@ -140,7 +143,12 @@ function sortTabs() {
     });
   } else {
     // Sort by open time, most recent first
-    allTabs.sort((a, b) => b.openTime - a.openTime);
+    // Pre-existing tabs (without timestamp) go to the bottom
+    allTabs.sort((a, b) => {
+      if (a.hasTimestamp && !b.hasTimestamp) return -1;
+      if (!a.hasTimestamp && b.hasTimestamp) return 1;
+      return b.openTime - a.openTime;
+    });
   }
 }
 
@@ -329,7 +337,7 @@ function renderTabs() {
     html += '<div class="time-list">';
     
     filteredTabs.forEach((tab, index) => {
-      const timeText = formatRelativeTime(tab.openTime);
+      const timeText = tab.hasTimestamp ? formatRelativeTime(tab.openTime) : '之前已打开';
       html += renderTabItem(tab, query, timeText, index);
     });
     
