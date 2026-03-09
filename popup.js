@@ -16,22 +16,41 @@ const sortByTimeBtn = document.getElementById('sortByTime');
 
 // Initialize
 async function init() {
-  // Load saved sort mode
-  const result = await chrome.storage.local.get('sortMode');
-  currentSortMode = result.sortMode || 'window';
-  updateSortButtons();
-  
-  await loadTabTimestamps();
-  await loadAllTabs();
-  setupEventListeners();
-  searchInput.focus();
+  try {
+    // Load saved sort mode
+    if (chrome.storage && chrome.storage.local) {
+      const result = await chrome.storage.local.get('sortMode');
+      currentSortMode = result.sortMode || 'window';
+    } else {
+      console.warn('Storage API not available, using default sort mode');
+      currentSortMode = 'window';
+    }
+    updateSortButtons();
+    
+    await loadTabTimestamps();
+    await loadAllTabs();
+    setupEventListeners();
+    searchInput.focus();
+  } catch (error) {
+    console.error('初始化失败:', error);
+    // Fallback: just load tabs without storage
+    currentSortMode = 'window';
+    updateSortButtons();
+    await loadAllTabs();
+    setupEventListeners();
+    searchInput.focus();
+  }
 }
 
 // Load tab timestamps from storage
 async function loadTabTimestamps() {
   try {
-    const result = await chrome.storage.local.get('tabTimestamps');
-    tabTimestamps = result.tabTimestamps || {};
+    if (chrome.storage && chrome.storage.local) {
+      const result = await chrome.storage.local.get('tabTimestamps');
+      tabTimestamps = result.tabTimestamps || {};
+    } else {
+      tabTimestamps = {};
+    }
     console.log('Loaded timestamps:', Object.keys(tabTimestamps).length);
   } catch (error) {
     console.error('加载时间戳失败:', error);
@@ -145,7 +164,13 @@ async function switchSortMode(mode) {
   currentSortMode = mode;
   
   // Save preference
-  await chrome.storage.local.set({ sortMode: mode });
+  try {
+    if (chrome.storage && chrome.storage.local) {
+      await chrome.storage.local.set({ sortMode: mode });
+    }
+  } catch (error) {
+    console.error('保存排序模式失败:', error);
+  }
   
   updateSortButtons();
   sortTabs();
