@@ -306,6 +306,64 @@ body {
   color: var(--text-secondary);
 }
 
+/* Sort Controls */
+.sort-controls {
+  display: flex;
+  gap: 8px;
+  padding: 8px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.sort-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sort-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--primary-light);
+}
+
+.sort-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.sort-icon { font-size: 14px; }
+
+/* Time List (for time sort mode) */
+.time-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.time-list .tab-item {
+  border-radius: var(--radius-sm);
+  margin-bottom: 2px;
+}
+
+.tab-time {
+  font-size: 10px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
 /* Shortcut Hint */
 .shortcut-hint {
   padding: 12px 24px;

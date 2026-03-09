@@ -4,17 +4,39 @@ let allTabs = [];
 let filteredTabs = [];
 let selectedIndex = -1;
 let windowsMap = new Map();
+let tabTimestamps = {};
+let currentSortMode = 'window'; // 'window' or 'time'
 
 // DOM Elements
 const searchInput = document.getElementById('searchInput');
 const tabList = document.getElementById('tabList');
 const stats = document.getElementById('stats');
+const sortByWindowBtn = document.getElementById('sortByWindow');
+const sortByTimeBtn = document.getElementById('sortByTime');
 
 // Initialize
 async function init() {
+  // Load saved sort mode
+  const result = await chrome.storage.local.get('sortMode');
+  currentSortMode = result.sortMode || 'window';
+  updateSortButtons();
+  
+  await loadTabTimestamps();
   await loadAllTabs();
   setupEventListeners();
   searchInput.focus();
+}
+
+// Load tab timestamps from storage
+async function loadTabTimestamps() {
+  try {
+    const result = await chrome.storage.local.get('tabTimestamps');
+    tabTimestamps = result.tabTimestamps || {};
+    console.log('Loaded timestamps:', Object.keys(tabTimestamps).length);
+  } catch (error) {
+    console.error('加载时间戳失败:', error);
+    tabTimestamps = {};
+  }
 }
 
 // Load all tabs from all windows
@@ -46,10 +68,14 @@ async function loadAllTabs() {
       
       if (window.tabs) {
         window.tabs.forEach(tab => {
+          // Get timestamp for this tab, fallback to current time if not recorded
+          const timestamp = tabTimestamps[tab.id] || Date.now();
+          
           allTabs.push({
             ...tab,
             windowIndex: index + 1,
-            windowFocused: isFocused
+            windowFocused: isFocused,
+            openTime: timestamp
           });
         });
       }
@@ -57,13 +83,8 @@ async function loadAllTabs() {
 
     console.log('Total tabs loaded:', allTabs.length);
 
-    // Sort: current window first, then by window id, then by tab index
-    allTabs.sort((a, b) => {
-      if (a.windowId === currentWindow.id && b.windowId !== currentWindow.id) return -1;
-      if (b.windowId === currentWindow.id && a.windowId !== currentWindow.id) return 1;
-      if (a.windowId !== b.windowId) return a.windowId - b.windowId;
-      return a.index - b.index;
-    });
+    // Sort based on current mode
+    sortTabs();
 
     filteredTabs = [...allTabs];
     updateStats();
@@ -84,16 +105,104 @@ async function loadAllTabs() {
   }
 }
 
+// Sort tabs based on current mode
+function sortTabs() {
+  if (currentSortMode === 'window') {
+    // Sort: current window first, then by window id, then by tab index
+    const currentWindow = Array.from(windowsMap.values()).find(w => w.focused);
+    const currentWindowId = currentWindow ? 
+      Array.from(windowsMap.entries()).find(([_, v]) => v.focused)?.[0] : null;
+    
+    allTabs.sort((a, b) => {
+      if (a.windowId === currentWindowId && b.windowId !== currentWindowId) return -1;
+      if (b.windowId === currentWindowId && a.windowId !== currentWindowId) return 1;
+      if (a.windowId !== b.windowId) return a.windowId - b.windowId;
+      return a.index - b.index;
+    });
+  } else {
+    // Sort by open time, most recent first
+    allTabs.sort((a, b) => b.openTime - a.openTime);
+  }
+}
+
+// Update sort button states
+function updateSortButtons() {
+  if (sortByWindowBtn && sortByTimeBtn) {
+    if (currentSortMode === 'window') {
+      sortByWindowBtn.classList.add('active');
+      sortByTimeBtn.classList.remove('active');
+    } else {
+      sortByWindowBtn.classList.remove('active');
+      sortByTimeBtn.classList.add('active');
+    }
+  }
+}
+
+// Switch sort mode
+async function switchSortMode(mode) {
+  if (mode === currentSortMode) return;
+  
+  currentSortMode = mode;
+  
+  // Save preference
+  await chrome.storage.local.set({ sortMode: mode });
+  
+  updateSortButtons();
+  sortTabs();
+  
+  // Re-apply current filter
+  filterTabs(searchInput.value);
+}
+
+// Format relative time
+function formatRelativeTime(timestamp) {
+  const now = Date.now();
+  const diff = now - timestamp;
+  
+  const minute = 60 * 1000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
+  const week = 7 * day;
+  
+  if (diff < minute) {
+    return '刚刚';
+  } else if (diff < hour) {
+    const minutes = Math.floor(diff / minute);
+    return `${minutes}分钟前`;
+  } else if (diff < day) {
+    const hours = Math.floor(diff / hour);
+    return `${hours}小时前`;
+  } else if (diff < 2 * day) {
+    const date = new Date(timestamp);
+    return `昨天 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+  } else if (diff < week) {
+    const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    const date = new Date(timestamp);
+    return `${days[date.getDay()]} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+  } else {
+    const date = new Date(timestamp);
+    return `${date.getMonth() + 1}月${date.getDate()}日`;
+  }
+}
+
 // Update statistics
 function updateStats() {
   const windowCount = windowsMap.size;
   const totalTabs = allTabs.length;
   const filteredCount = filteredTabs.length;
-
-  if (filteredCount === totalTabs) {
-    stats.textContent = `共 ${windowCount} 个窗口，${totalTabs} 个Tab`;
+  
+  if (currentSortMode === 'window') {
+    if (filteredCount === totalTabs) {
+      stats.textContent = `共 ${windowCount} 个窗口，${totalTabs} 个Tab`;
+    } else {
+      stats.textContent = `找到 ${filteredCount} 个结果 (共 ${totalTabs} 个Tab)`;
+    }
   } else {
-    stats.textContent = `找到 ${filteredCount} 个结果 (共 ${totalTabs} 个Tab)`;
+    if (filteredCount === totalTabs) {
+      stats.textContent = `共 ${totalTabs} 个Tab，按打开时间排序`;
+    } else {
+      stats.textContent = `找到 ${filteredCount} 个结果 (共 ${totalTabs} 个Tab)`;
+    }
   }
 }
 
@@ -152,69 +261,59 @@ function renderTabs() {
   }
   
   // Debug info
-  console.log('Rendering tabs:', filteredTabs.length, 'from', windowsMap.size, 'windows');
-
-  // Group tabs by window
-  const groupedTabs = new Map();
-  filteredTabs.forEach((tab, index) => {
-    if (!groupedTabs.has(tab.windowId)) {
-      groupedTabs.set(tab.windowId, []);
-    }
-    groupedTabs.get(tab.windowId).push({ ...tab, filteredIndex: index });
-  });
+  console.log('Rendering tabs:', filteredTabs.length, 'mode:', currentSortMode);
 
   const query = searchInput.value;
   let html = '';
 
-  groupedTabs.forEach((tabs, windowId) => {
-    const windowInfo = windowsMap.get(windowId);
-    const isCurrentWindow = tabs[0].windowFocused;
-
-    html += `
-      <div class="window-group">
-        <div class="window-header ${isCurrentWindow ? 'current' : ''}">
-          <span class="window-icon">${isCurrentWindow ? '🪟' : '📑'}</span>
-          <span title="${escapeHtml(windowInfo.name || '')}">窗口 ${windowInfo.index}${windowInfo.name ? ' - ' + escapeHtml(windowInfo.name.substring(0, 30)) + (windowInfo.name.length > 30 ? '...' : '') : ''} ${isCurrentWindow ? '(当前)' : ''}</span>
-          <span class="window-tabs-count">${tabs.length} 个Tab</span>
-        </div>
-        <div class="window-tabs">
-    `;
-
-    tabs.forEach(tab => {
-      const isActive = tab.active ? 'active' : '';
-      const isSelected = tab.filteredIndex === selectedIndex ? 'selected' : '';
-      const favicon = tab.favIconUrl || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📄%3C/text%3E%3C/svg%3E";
-
-      let badges = '';
-      if (tab.active || tab.audible) {
-        badges = '<div class="tab-badges">';
-        if (tab.active) badges += '<span class="tab-badge active">当前</span>';
-        if (tab.audible) badges += '<span class="tab-badge audible">🔊</span>';
-        badges += '</div>';
+  if (currentSortMode === 'window') {
+    // Group tabs by window
+    const groupedTabs = new Map();
+    filteredTabs.forEach((tab, index) => {
+      if (!groupedTabs.has(tab.windowId)) {
+        groupedTabs.set(tab.windowId, []);
       }
+      groupedTabs.get(tab.windowId).push({ ...tab, filteredIndex: index });
+    });
+
+    groupedTabs.forEach((tabs, windowId) => {
+      const windowInfo = windowsMap.get(windowId);
+      const isCurrentWindow = tabs[0].windowFocused;
 
       html += `
-        <div class="tab-item ${isActive} ${isSelected}" data-index="${tab.filteredIndex}" data-tab-id="${tab.id}" data-window-id="${tab.windowId}">
-          <img class="tab-icon" src="${favicon}" alt="" data-fallback="true">
-          <div class="tab-content">
-            <div class="tab-title">${highlightText(tab.title, query)}</div>
-            <div class="tab-url">${highlightText(tab.url, query)}</div>
+        <div class="window-group">
+          <div class="window-header ${isCurrentWindow ? 'current' : ''}">
+            <span class="window-icon">${isCurrentWindow ? '🪟' : '📑'}</span>
+            <span title="${escapeHtml(windowInfo.name || '')}">窗口 ${windowInfo.index}${windowInfo.name ? ' - ' + escapeHtml(windowInfo.name.substring(0, 30)) + (windowInfo.name.length > 30 ? '...' : '') : ''} ${isCurrentWindow ? '(当前)' : ''}</span>
+            <span class="window-tabs-count">${tabs.length} 个Tab</span>
           </div>
-          ${badges}
+          <div class="window-tabs">
+      `;
+
+      tabs.forEach(tab => {
+        html += renderTabItem(tab, query);
+      });
+
+      html += `
+          </div>
         </div>
       `;
     });
-
-      html += `
-          </div>
-        </div>
-      </div>
-    `;
-  });
+  } else {
+    // Time sort mode - flat list with time info
+    html += '<div class="time-list">';
+    
+    filteredTabs.forEach((tab, index) => {
+      const timeText = formatRelativeTime(tab.openTime);
+      html += renderTabItem(tab, query, timeText, index);
+    });
+    
+    html += '</div>';
+  }
 
   tabList.innerHTML = html;
 
-  // Add error handlers for images (CSP compliant)
+  // Add error handlers for images
   document.querySelectorAll('.tab-icon[data-fallback="true"]').forEach(img => {
     img.addEventListener('error', function() {
       this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📄%3C/text%3E%3C/svg%3E";
@@ -237,6 +336,40 @@ function renderTabs() {
       selected.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
   }
+}
+
+// Render single tab item
+function renderTabItem(tab, query, timeText = null, filteredIndex = null) {
+  const isActive = tab.active ? 'active' : '';
+  const index = filteredIndex !== null ? filteredIndex : tab.filteredIndex;
+  const isSelected = index === selectedIndex ? 'selected' : '';
+  const favicon = tab.favIconUrl || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📄%3C/text%3E%3C/svg%3E";
+
+  let badges = '';
+  if (tab.active || tab.audible) {
+    badges = '<div class="tab-badges">';
+    if (tab.active) badges += '<span class="tab-badge active">当前</span>';
+    if (tab.audible) badges += '<span class="tab-badge audible">🔊</span>';
+    badges += '</div>';
+  }
+  
+  // Add time info for time sort mode
+  let timeInfo = '';
+  if (timeText) {
+    timeInfo = `<div class="tab-time">${timeText}</div>`;
+  }
+
+  return `
+    <div class="tab-item ${isActive} ${isSelected}" data-index="${index}" data-tab-id="${tab.id}" data-window-id="${tab.windowId}">
+      <img class="tab-icon" src="${favicon}" alt="" data-fallback="true">
+      <div class="tab-content">
+        <div class="tab-title">${highlightText(tab.title, query)}</div>
+        <div class="tab-url">${highlightText(tab.url, query)}</div>
+        ${timeInfo}
+      </div>
+      ${badges}
+    </div>
+  `;
 }
 
 // Switch to a tab
@@ -297,8 +430,28 @@ function setupEventListeners() {
     filterTabs(e.target.value);
   });
 
+  // Sort buttons
+  if (sortByWindowBtn) {
+    sortByWindowBtn.addEventListener('click', () => switchSortMode('window'));
+  }
+  if (sortByTimeBtn) {
+    sortByTimeBtn.addEventListener('click', () => switchSortMode('time'));
+  }
+
   // Keyboard navigation
   document.addEventListener('keydown', (e) => {
+    // Number keys 1 and 2 for sort mode switching
+    if (e.key === '1' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      switchSortMode('window');
+      return;
+    }
+    if (e.key === '2' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      switchSortMode('time');
+      return;
+    }
+    
     switch (e.key) {
       case 'ArrowUp':
         e.preventDefault();
