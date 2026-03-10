@@ -30,7 +30,7 @@
 
 ### 方式一：下载安装（最简单，无需 Chrome Web Store）
 
-1. **下载** → 点击下载 [`chrome-tab-search-store-v1.0.1.zip`](./chrome-tab-search-store-v1.0.1.zip)（推荐最新版）
+1. **下载** → 点击下载 [`chrome-tab-search-store-v1.0.3.zip`](./chrome-tab-search-store-v1.0.3.zip)（推荐最新版）
 2. **解压** → 将 ZIP 解压到任意文件夹
 3. **安装** → 打开 Chrome，访问 `chrome://extensions/`
 4. **开启开发者模式** → 打开右上角开关
@@ -78,7 +78,7 @@ chrome-tab-search/
 ├── manifest.json                    # 扩展配置
 ├── popup.html / popup.js / styles.css   # 界面和逻辑
 ├── icons/                           # 图标文件
-├── chrome-tab-search-store-v1.0.1.zip   # 📦 推荐下载此文件安装
+├── chrome-tab-search-store-v1.0.3.zip   # 📦 推荐下载此文件安装
 ├── PRIVACY_POLICY.md               # 隐私政策
 └── README.md                       # 本文件
 ```
