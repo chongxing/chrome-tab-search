@@ -11,17 +11,18 @@
 
 ![Tab Search 截图](./screenshot-1280x800.jpg)
 
-## 🕐 按时间排序功能
+## 🕐 按最近访问排序
 
-点击顶部的"🕐 时间"按钮，Tab 会按打开时间重新排序，最近打开的排在最前面：
+点击顶部的"🕐 时间"按钮，Tab 会按**最后访问时间**重新排序，最近看过的排在最前面：
 
 ![按时间排序](./screenshot-time-sort.jpg)
 
 **特点：**
 - 🔥 **智能分组**：自动按"刚刚"、"今天"、"昨天"、"更早"分组
-- ⏰ **时间显示**：每个 Tab 显示打开时间，快速定位
-- 🌐 **跨窗口整合**：所有窗口的 Tab 按时间混合排序
+- ⏰ **时间显示**：每个 Tab 显示最后访问时间，快速定位
+- 🌐 **跨窗口整合**：所有窗口的 Tab 按访问时间混合排序
 - 🔄 **一键切换**：随时在"窗口分组"和"时间排序"间切换
+- 👀 **访问追踪**：自动记录你查看过/切换过的 Tab，不只是打开时间
 
 > 💡 **适用场景**：只记得"刚才看过"某个页面，但不记得在哪个窗口
 
@@ -40,27 +41,21 @@
 
 ---
 
-## 🚀 快速开始（推荐）
+## 🚀 快速开始
 
-### 方式一：下载安装（最简单，无需 Chrome Web Store）
+### 方式一：Chrome Web Store 安装（推荐）
 
-1. **下载** → 点击下载 [`chrome-tab-search-store-v1.0.3.zip`](./chrome-tab-search-store-v1.0.3.zip)（推荐最新版）
+1. 访问 [Chrome Web Store - Tab Search](https://chrome.google.com/webstore/detail/tab-search-cross-window/anegolpfjipjfddbddlmfblpdbiianka)
+2. 点击「**添加至 Chrome**」
+3. 安装完成后，建议点击工具栏的 📌 图标将扩展固定
+
+### 方式二：下载安装
+
+1. **下载** → [`chrome-tab-search-store-v1.0.5.zip`](./chrome-tab-search-store-v1.0.5.zip)（最新版）
 2. **解压** → 将 ZIP 解压到任意文件夹
 3. **安装** → 打开 Chrome，访问 `chrome://extensions/`
 4. **开启开发者模式** → 打开右上角开关
 5. **加载扩展** → 点击「**加载已解压的扩展程序**」，选择解压后的文件夹
-6. **完成！** → 插件图标会出现在浏览器工具栏
-
-> 💡 **提示**：建议点击工具栏的 📌 图标将扩展固定，方便随时使用
-
-### 方式二：克隆源码安装
-
-```bash
-git clone https://github.com/chongxing/chrome-tab-search.git
-cd chrome-tab-search
-```
-
-然后在 Chrome 中加载已解压的扩展程序，选择此文件夹。
 
 ---
 
@@ -92,7 +87,7 @@ chrome-tab-search/
 ├── manifest.json                    # 扩展配置
 ├── popup.html / popup.js / styles.css   # 界面和逻辑
 ├── icons/                           # 图标文件
-├── chrome-tab-search-store-v1.0.3.zip   # 📦 推荐下载此文件安装
+├── chrome-tab-search-store-v1.0.5.zip   # 📦 最新版安装包
 ├── PRIVACY_POLICY.md               # 隐私政策
 └── README.md                       # 本文件
 ```
@@ -119,8 +114,10 @@ chrome-tab-search/
 
 ## 🌐 Chrome Web Store
 
-> Chrome Web Store 版本正在审核中，审核通过后会上架。  
-> 目前推荐通过上方「快速开始」方式安装。
+✅ **已上架 Chrome Web Store**：[Tab Search - Cross Window](https://chrome.google.com/webstore/detail/tab-search-cross-window/anegolpfjipjfddbddlmfblpdbiianka)
+
+- 版本：v1.0.5
+- 新增按最近访问时间排序功能
 
 ---
 
@@ -131,10 +128,10 @@ chrome-tab-search/
 > 🔥 推荐一个超实用的 Chrome 扩展！  
 > 经常开几十个 Tab 找不到？试试 Tab Search！  
 > ✨ 跨窗口搜索所有 Tab，快捷键秒开秒找  
-> 🎯 一键跳转，效率翻倍！  
+> 🎯 一键跳转，效率翻倍！
 > 
-> 📥 安装：https://github.com/chongxing/chrome-tab-search  
-> （Chrome Web Store 审核中，目前可直接从 GitHub 下载安装）
+> 📥 Chrome Web Store：https://chrome.google.com/webstore/detail/tab-search-cross-window/anegolpfjipjfddbddlmfblpdbiianka  
+> 💻 GitHub：https://github.com/chongxing/chrome-tab-search
 
 ---
 
@@ -151,3 +148,5 @@ MIT License © [chongxing](https://github.com/chongxing)
 ---
 
 Made with ❤️ for multi-window users
+
+<!-- Updated: 2026-03-15 -->

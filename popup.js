@@ -4,7 +4,7 @@ let allTabs = [];
 let filteredTabs = [];
 let selectedIndex = -1;
 let windowsMap = new Map();
-let tabTimestamps = {};
+let tabAccessTimes = {};
 let currentSortMode = 'window'; // 'window' or 'time'
 
 // DOM Elements
@@ -27,7 +27,7 @@ async function init() {
     }
     updateSortButtons();
     
-    await loadTabTimestamps();
+    await loadTabAccessTimes();
     await loadAllTabs();
     setupEventListeners();
     searchInput.focus();
@@ -42,19 +42,19 @@ async function init() {
   }
 }
 
-// Load tab timestamps from storage
-async function loadTabTimestamps() {
+// Load tab access times from storage
+async function loadTabAccessTimes() {
   try {
     if (chrome.storage && chrome.storage.local) {
-      const result = await chrome.storage.local.get('tabTimestamps');
-      tabTimestamps = result.tabTimestamps || {};
+      const result = await chrome.storage.local.get('tabAccessTimes');
+      tabAccessTimes = result.tabAccessTimes || {};
     } else {
-      tabTimestamps = {};
+      tabAccessTimes = {};
     }
-    console.log('Loaded timestamps:', Object.keys(tabTimestamps).length);
+    console.log('Loaded access times:', Object.keys(tabAccessTimes).length);
   } catch (error) {
-    console.error('加载时间戳失败:', error);
-    tabTimestamps = {};
+    console.error('加载访问时间失败:', error);
+    tabAccessTimes = {};
   }
 }
 
@@ -87,17 +87,17 @@ async function loadAllTabs() {
       
       if (window.tabs) {
         window.tabs.forEach(tab => {
-          // Check if this tab has a recorded timestamp
-          const hasTimestamp = tabTimestamps.hasOwnProperty(tab.id);
-          // If no timestamp, use 0 (will be sorted to bottom)
-          const timestamp = hasTimestamp ? tabTimestamps[tab.id] : 0;
+          // Check if this tab has a recorded access time
+          const hasAccessTime = tabAccessTimes.hasOwnProperty(tab.id);
+          // If no access time, use 0 (will be sorted to bottom)
+          const accessTime = hasAccessTime ? tabAccessTimes[tab.id] : 0;
           
           allTabs.push({
             ...tab,
             windowIndex: index + 1,
             windowFocused: isFocused,
-            openTime: timestamp,
-            hasTimestamp: hasTimestamp
+            accessTime: accessTime,
+            hasAccessTime: hasAccessTime
           });
         });
       }
@@ -142,12 +142,12 @@ function sortTabs() {
       return a.index - b.index;
     });
   } else {
-    // Sort by open time, most recent first
-    // Pre-existing tabs (without timestamp) go to the bottom
+    // Sort by last access time, most recent first
+    // Tabs without access time go to the bottom
     allTabs.sort((a, b) => {
-      if (a.hasTimestamp && !b.hasTimestamp) return -1;
-      if (!a.hasTimestamp && b.hasTimestamp) return 1;
-      return b.openTime - a.openTime;
+      if (a.hasAccessTime && !b.hasAccessTime) return -1;
+      if (!a.hasAccessTime && b.hasAccessTime) return 1;
+      return b.accessTime - a.accessTime;
     });
   }
 }
@@ -232,7 +232,7 @@ function updateStats() {
     }
   } else {
     if (filteredCount === totalTabs) {
-      stats.textContent = `共 ${totalTabs} 个Tab，按打开时间排序`;
+      stats.textContent = `共 ${totalTabs} 个Tab，按最近访问排序`;
     } else {
       stats.textContent = `找到 ${filteredCount} 个结果 (共 ${totalTabs} 个Tab)`;
     }
@@ -337,7 +337,7 @@ function renderTabs() {
     html += '<div class="time-list">';
     
     filteredTabs.forEach((tab, index) => {
-      const timeText = tab.hasTimestamp ? formatRelativeTime(tab.openTime) : '之前已打开';
+      const timeText = tab.hasAccessTime ? formatRelativeTime(tab.accessTime) : '之前已访问';
       html += renderTabItem(tab, query, timeText, index);
     });
     
