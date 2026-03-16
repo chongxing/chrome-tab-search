@@ -45,9 +45,13 @@
 
 ### 方式一：Chrome Web Store 安装（推荐）
 
+> ⏳ **审核中**：v1.0.5 已提交 Chrome Web Store，正在等待审核通过
+
 1. 访问 [Chrome Web Store - Tab Search](https://chrome.google.com/webstore/detail/tab-search-cross-window/anegolpfjipjfddbddlmfblpdbiianka)
-2. 点击「**添加至 Chrome**」
+2. 审核通过后点击「**添加至 Chrome**」
 3. 安装完成后，建议点击工具栏的 📌 图标将扩展固定
+
+> 💡 审核期间可先使用「方式二」下载安装体验
 
 ### 方式二：下载安装
 
@@ -114,10 +118,11 @@ chrome-tab-search/
 
 ## 🌐 Chrome Web Store
 
-✅ **已上架 Chrome Web Store**：[Tab Search - Cross Window](https://chrome.google.com/webstore/detail/tab-search-cross-window/anegolpfjipjfddbddlmfblpdbiianka)
+⏳ **审核中**：[Tab Search - Cross Window](https://chrome.google.com/webstore/detail/tab-search-cross-window/anegolpfjipjfddbddlmfblpdbiianka)
 
-- 版本：v1.0.5
+- 版本：v1.0.5（已提交审核）
 - 新增按最近访问时间排序功能
+- 当前状态：等待 Chrome Web Store 审核通过
 
 ---
 
