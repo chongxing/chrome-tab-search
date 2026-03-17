@@ -1,6 +1,6 @@
 # Privacy Policy for Tab Search - Cross Window
 
-**Last Updated:** March 7, 2025
+**Last Updated:** March 17, 2025
 
 ## Overview
 
@@ -38,9 +38,10 @@ The tab information is used solely for:
 
 ## Data Storage
 
-- **No Persistent Storage**: We do not store any data permanently
+- **Local Storage Only**: Tab access times are stored locally using `chrome.storage.local` for the time-based sorting feature
 - **No Cloud Sync**: Your tab information never leaves your browser
-- **Session-Only**: Data exists only while the extension popup is open
+- **No Permanent History**: We only track the last access time of currently open tabs, not your browsing history
+- **Data Removal**: Access time data is removed when tabs are closed
 
 ## Data Sharing
 
@@ -48,8 +49,9 @@ We do **NOT** share, sell, or transfer any data to third parties.
 
 ## Permissions Justification
 
-- **`tabs`**: Required to list and switch between open tabs
-- **`activeTab`**: Required to identify the current window for sorting
+- **`tabs`**: Required to list and switch between open tabs, read tab titles/URLs for search
+- **`windows`**: Required to group tabs by window and switch between windows when jumping to a tab
+- **`storage`**: Required to store tab last access times for the time-based sorting feature
 
 ## Changes to This Policy
 
@@ -68,4 +70,4 @@ This extension complies with:
 
 ---
 
-**Summary**: Your data stays on your device. We don't collect it, we don't store it, we don't share it.
+**Summary**: Tab access times are stored locally on your device for the time-based sorting feature. No data is transmitted to external servers or shared with third parties.

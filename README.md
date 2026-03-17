@@ -9,7 +9,7 @@
 
 一个轻量级 Chrome 扩展，让你在所有窗口中快速搜索并跳转到指定的 Tab。
 
-![Tab Search 截图](./screenshot-1280x800.jpg)
+![Tab Search 截图](./screenshot-window-mode.jpg)
 
 ## 🕐 按最近访问排序
 
@@ -45,13 +45,13 @@
 
 ### 方式一：Chrome Web Store 安装（推荐）
 
-> ⏳ **审核中**：v1.0.5 已提交 Chrome Web Store，正在等待审核通过
+✅ **v1.0.4 已上线**：[Chrome Web Store - Tab Search](https://chromewebstore.google.com/detail/anegolpfjipjfddbddlmfblpdbiianka?utm_source=item-share-cb)
 
-1. 访问 [Chrome Web Store - Tab Search](https://chrome.google.com/webstore/detail/tab-search-cross-window/anegolpfjipjfddbddlmfblpdbiianka)
-2. 审核通过后点击「**添加至 Chrome**」
+1. 点击上方链接访问 Chrome Web Store
+2. 点击「**添加至 Chrome**」安装
 3. 安装完成后，建议点击工具栏的 📌 图标将扩展固定
 
-> 💡 审核期间可先使用「方式二」下载安装体验
+⏳ **v1.0.5 审核中**：新增基于 Tab 访问时间的排序功能，正在等待 Chrome Web Store 审核通过
 
 ### 方式二：下载安装
 
@@ -118,11 +118,15 @@ chrome-tab-search/
 
 ## 🌐 Chrome Web Store
 
-⏳ **审核中**：[Tab Search - Cross Window](https://chrome.google.com/webstore/detail/tab-search-cross-window/anegolpfjipjfddbddlmfblpdbiianka)
+| 版本 | 状态 | 链接 |
+|------|------|------|
+| **v1.0.4** | ✅ 已上线 | [Chrome Web Store](https://chromewebstore.google.com/detail/anegolpfjipjfddbddlmfblpdbiianka?utm_source=item-share-cb) |
+| **v1.0.5** | ⏳ 审核中 | 基于 Tab 访问时间排序功能 |
 
-- 版本：v1.0.5（已提交审核）
-- 新增按最近访问时间排序功能
-- 当前状态：等待 Chrome Web Store 审核通过
+### v1.0.5 新功能预览
+- 🕐 **按最后访问时间排序** - 自动记录并排序你查看过的 Tab
+- 🔥 **智能时间分组** - "刚刚"、"今天"、"昨天"、"更早"
+- 🌐 **跨窗口时间整合** - 所有窗口的 Tab 按访问时间混合排序
 
 ---
 
@@ -135,7 +139,7 @@ chrome-tab-search/
 > ✨ 跨窗口搜索所有 Tab，快捷键秒开秒找  
 > 🎯 一键跳转，效率翻倍！
 > 
-> 📥 Chrome Web Store：https://chrome.google.com/webstore/detail/tab-search-cross-window/anegolpfjipjfddbddlmfblpdbiianka  
+> 📥 Chrome Web Store：https://chromewebstore.google.com/detail/anegolpfjipjfddbddlmfblpdbiianka  
 > 💻 GitHub：https://github.com/chongxing/chrome-tab-search
 
 ---
@@ -154,4 +158,4 @@ MIT License © [chongxing](https://github.com/chongxing)
 
 Made with ❤️ for multi-window users
 
-<!-- Updated: 2026-03-15 -->
+<!-- Updated: 2026-03-17 -->
