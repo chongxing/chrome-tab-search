@@ -5,6 +5,7 @@ let filteredTabs = [];
 let selectedIndex = -1;
 let windowsMap = new Map();
 let tabAccessTimes = {};
+let pinnedTabIds = new Set(); // 存储被 PIN 的 tab IDs
 let currentSortMode = 'window'; // 'window' or 'time'
 
 // DOM Elements
@@ -28,6 +29,7 @@ async function init() {
     updateSortButtons();
     
     await loadTabAccessTimes();
+    await loadPinnedTabs(); // 加载 PIN 状态
     await loadAllTabs();
     setupEventListeners();
     searchInput.focus();
@@ -56,6 +58,49 @@ async function loadTabAccessTimes() {
     console.error('加载访问时间失败:', error);
     tabAccessTimes = {};
   }
+}
+
+// Load pinned tabs from storage
+async function loadPinnedTabs() {
+  try {
+    if (chrome.storage && chrome.storage.local) {
+      const result = await chrome.storage.local.get('pinnedTabIds');
+      const pinnedArray = result.pinnedTabIds || [];
+      pinnedTabIds = new Set(pinnedArray);
+    } else {
+      pinnedTabIds = new Set();
+    }
+    console.log('Loaded pinned tabs:', pinnedTabIds.size);
+  } catch (error) {
+    console.error('加载PIN状态失败:', error);
+    pinnedTabIds = new Set();
+  }
+}
+
+// Save pinned tabs to storage
+async function savePinnedTabs() {
+  try {
+    if (chrome.storage && chrome.storage.local) {
+      await chrome.storage.local.set({ pinnedTabIds: Array.from(pinnedTabIds) });
+    }
+  } catch (error) {
+    console.error('保存PIN状态失败:', error);
+  }
+}
+
+// Toggle pin status for a tab
+async function togglePinTab(tabId) {
+  tabId = parseInt(tabId);
+  if (pinnedTabIds.has(tabId)) {
+    pinnedTabIds.delete(tabId);
+  } else {
+    pinnedTabIds.add(tabId);
+  }
+  await savePinnedTabs();
+  
+  // Re-sort and re-render
+  sortTabs();
+  filterTabs(searchInput.value);
 }
 
 // Load all tabs from all windows
@@ -136,6 +181,11 @@ function sortTabs() {
       Array.from(windowsMap.entries()).find(([_, v]) => v.focused)?.[0] : null;
     
     allTabs.sort((a, b) => {
+      // PIN 的 tab 在最前面（即使在窗口模式下也优先）
+      const aPinned = pinnedTabIds.has(a.id) ? 1 : 0;
+      const bPinned = pinnedTabIds.has(b.id) ? 1 : 0;
+      if (aPinned !== bPinned) return bPinned - aPinned;
+      
       if (a.windowId === currentWindowId && b.windowId !== currentWindowId) return -1;
       if (b.windowId === currentWindowId && a.windowId !== currentWindowId) return 1;
       if (a.windowId !== b.windowId) return a.windowId - b.windowId;
@@ -143,8 +193,13 @@ function sortTabs() {
     });
   } else {
     // Sort by last access time, most recent first
-    // Tabs without access time go to the bottom
+    // PIN 的 tab 永远在最前面
     allTabs.sort((a, b) => {
+      const aPinned = pinnedTabIds.has(a.id) ? 1 : 0;
+      const bPinned = pinnedTabIds.has(b.id) ? 1 : 0;
+      if (aPinned !== bPinned) return bPinned - aPinned;
+      
+      // 非 PIN 的 tab 按访问时间排序
       if (a.hasAccessTime && !b.hasAccessTime) return -1;
       if (!a.hasAccessTime && b.hasAccessTime) return 1;
       return b.accessTime - a.accessTime;
@@ -223,20 +278,27 @@ function updateStats() {
   const windowCount = windowsMap.size;
   const totalTabs = allTabs.length;
   const filteredCount = filteredTabs.length;
+  const pinnedCount = pinnedTabIds.size;
   
+  let text = '';
   if (currentSortMode === 'window') {
     if (filteredCount === totalTabs) {
-      stats.textContent = `共 ${windowCount} 个窗口，${totalTabs} 个Tab`;
+      text = `共 ${windowCount} 个窗口，${totalTabs} 个Tab`;
     } else {
-      stats.textContent = `找到 ${filteredCount} 个结果 (共 ${totalTabs} 个Tab)`;
+      text = `找到 ${filteredCount} 个结果 (共 ${totalTabs} 个Tab)`;
     }
   } else {
     if (filteredCount === totalTabs) {
-      stats.textContent = `共 ${totalTabs} 个Tab，按最近访问排序`;
+      text = `共 ${totalTabs} 个Tab`;
+      if (pinnedCount > 0) {
+        text += `，${pinnedCount} 个已PIN`;
+      }
+      text += '，按最近访问排序';
     } else {
-      stats.textContent = `找到 ${filteredCount} 个结果 (共 ${totalTabs} 个Tab)`;
+      text = `找到 ${filteredCount} 个结果 (共 ${totalTabs} 个Tab)`;
     }
   }
+  stats.textContent = text;
 }
 
 // Filter tabs based on search query
@@ -355,10 +417,24 @@ function renderTabs() {
 
   // Add click handlers
   document.querySelectorAll('.tab-item').forEach(item => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', (e) => {
+      // 如果点击的是 PIN 按钮，不触发跳转
+      if (e.target.closest('.pin-btn')) return;
+      
       const tabId = parseInt(item.dataset.tabId);
       const windowId = parseInt(item.dataset.windowId);
       switchToTab(tabId, windowId);
+    });
+  });
+
+  // Add PIN button click handlers
+  document.querySelectorAll('.pin-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const tabId = btn.dataset.tabId;
+      await togglePinTab(tabId);
     });
   });
 
@@ -376,6 +452,7 @@ function renderTabItem(tab, query, timeText = null, filteredIndex = null) {
   const isActive = tab.active ? 'active' : '';
   const index = filteredIndex !== null ? filteredIndex : tab.filteredIndex;
   const isSelected = index === selectedIndex ? 'selected' : '';
+  const isPinned = pinnedTabIds.has(tab.id);
   const favicon = tab.favIconUrl || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📄%3C/text%3E%3C/svg%3E";
 
   let badges = '';
@@ -392,8 +469,12 @@ function renderTabItem(tab, query, timeText = null, filteredIndex = null) {
     timeInfo = `<div class="tab-time">${timeText}</div>`;
   }
 
+  // PIN 按钮
+  const pinButton = `<button class="pin-btn ${isPinned ? 'pinned' : ''}" data-tab-id="${tab.id}" title="${isPinned ? '取消PIN' : 'PIN住此标签'}">${isPinned ? '📌' : '📍'}</button>`;
+
   return `
-    <div class="tab-item ${isActive} ${isSelected}" data-index="${index}" data-tab-id="${tab.id}" data-window-id="${tab.windowId}">
+    <div class="tab-item ${isActive} ${isSelected} ${isPinned ? 'pinned' : ''}" data-index="${index}" data-tab-id="${tab.id}" data-window-id="${tab.windowId}">
+      ${pinButton}
       <img class="tab-icon" src="${favicon}" alt="" data-fallback="true">
       <div class="tab-content">
         <div class="tab-title">${highlightText(tab.title, query)}</div>
@@ -472,16 +553,41 @@ function setupEventListeners() {
   }
 
   // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
-    // Number keys 1 and 2 for sort mode switching
-    if (e.key === '1' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+  document.addEventListener('keydown', async (e) => {
+    // Check if search input is focused
+    const isSearchFocused = document.activeElement === searchInput;
+    
+    // Number keys 1 and 2 for sort mode switching (only when search is not focused)
+    if (!isSearchFocused && e.key === '1' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       e.preventDefault();
       switchSortMode('window');
       return;
     }
-    if (e.key === '2' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    if (!isSearchFocused && e.key === '2' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       e.preventDefault();
       switchSortMode('time');
+      return;
+    }
+    
+    // Arrow keys Left/Right for sort mode switching (only when search is not focused)
+    if (!isSearchFocused && e.key === 'ArrowLeft' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      switchSortMode('window');
+      return;
+    }
+    if (!isSearchFocused && e.key === 'ArrowRight' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      switchSortMode('time');
+      return;
+    }
+    
+    // 'p' key to toggle PIN on selected tab (only when search is not focused)
+    if (!isSearchFocused && e.key === 'p' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      if (selectedIndex >= 0 && selectedIndex < filteredTabs.length) {
+        const tab = filteredTabs[selectedIndex];
+        await togglePinTab(tab.id);
+      }
       return;
     }
     
