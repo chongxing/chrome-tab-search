@@ -583,45 +583,42 @@ function setupEventListeners() {
 
 // Replace i18n placeholders in HTML
 function replaceI18nPlaceholders() {
-  // Replace text content in all elements
-  const elements = document.querySelectorAll('*');
-  elements.forEach(el => {
-    // Skip script elements
-    if (el.tagName === 'SCRIPT') return;
+  // Replace text nodes in all elements (including those with child elements)
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+  
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    const text = node.textContent;
     
-    // Replace text content
-    if (el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
-      const text = el.textContent;
-      if (text.includes('__MSG_')) {
-        const key = text.replace(/__MSG_|__/g, '');
-        const translated = chrome.i18n.getMessage(key);
-        if (translated) {
-          el.textContent = translated;
-        }
+    if (text.includes('__MSG_')) {
+      const key = text.trim().replace(/__MSG_|__/g, '');
+      const translated = chrome.i18n.getMessage(key);
+      if (translated) {
+        node.textContent = translated;
       }
     }
-    
-    // Replace placeholder attributes
-    if (el.hasAttribute('placeholder')) {
-      const placeholder = el.getAttribute('placeholder');
-      if (placeholder.includes('__MSG_')) {
-        const key = placeholder.replace(/__MSG_|__/g, '');
-        const translated = chrome.i18n.getMessage(key);
-        if (translated) {
-          el.setAttribute('placeholder', translated);
-        }
+  }
+  
+  // Replace placeholder attributes
+  document.querySelectorAll('[placeholder]').forEach(el => {
+    const placeholder = el.getAttribute('placeholder');
+    if (placeholder.includes('__MSG_')) {
+      const key = placeholder.replace(/__MSG_|__/g, '');
+      const translated = chrome.i18n.getMessage(key);
+      if (translated) {
+        el.setAttribute('placeholder', translated);
       }
     }
-    
-    // Replace title attributes
-    if (el.hasAttribute('title')) {
-      const title = el.getAttribute('title');
-      if (title.includes('__MSG_')) {
-        const key = title.replace(/__MSG_|__/g, '');
-        const translated = chrome.i18n.getMessage(key);
-        if (translated) {
-          el.setAttribute('title', translated);
-        }
+  });
+  
+  // Replace title attributes
+  document.querySelectorAll('[title]').forEach(el => {
+    const title = el.getAttribute('title');
+    if (title.includes('__MSG_')) {
+      const key = title.replace(/__MSG_|__/g, '');
+      const translated = chrome.i18n.getMessage(key);
+      if (translated) {
+        el.setAttribute('title', translated);
       }
     }
   });
