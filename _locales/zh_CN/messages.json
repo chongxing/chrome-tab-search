@@ -1,0 +1,244 @@
+{
+  "extensionName": {
+    "message": "Tab Search - Cross Window",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "跨窗口快速搜索并跳转到任意标签页，支持按时间排序和PIN功能",
+    "description": "Extension description"
+  },
+  "subtitle": {
+    "message": "跨窗口搜索并快速跳转",
+    "description": "Subtitle shown in popup header"
+  },
+  "searchPlaceholder": {
+    "message": "搜索Tab标题或URL...",
+    "description": "Search input placeholder"
+  },
+  "sortByWindow": {
+    "message": "窗口",
+    "description": "Sort by window button"
+  },
+  "sortByTime": {
+    "message": "时间",
+    "description": "Sort by time button"
+  },
+  "windowSortTooltip": {
+    "message": "按窗口分组",
+    "description": "Window sort button tooltip"
+  },
+  "timeSortTooltip": {
+    "message": "按最近访问排序",
+    "description": "Time sort button tooltip"
+  },
+  "loading": {
+    "message": "正在加载...",
+    "description": "Loading text"
+  },
+  "loadingTabs": {
+    "message": "加载中...",
+    "description": "Loading tabs text"
+  },
+  "statsWindowsAndTabs": {
+    "message": "共 $WINDOW_COUNT$ 个窗口，$TAB_COUNT$ 个Tab",
+    "description": "Stats text for window mode",
+    "placeholders": {
+      "window_count": {
+        "content": "$1",
+        "example": "3"
+      },
+      "tab_count": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "statsResults": {
+    "message": "找到 $FILTERED$ 个结果 (共 $TOTAL$ 个Tab)",
+    "description": "Stats text when filtering",
+    "placeholders": {
+      "filtered": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "statsTotalTabs": {
+    "message": "共 $COUNT$ 个Tab",
+    "description": "Stats text for time mode",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "statsPinned": {
+    "message": "$COUNT$ 个已PIN",
+    "description": "Stats text for pinned count",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "statsSortedByTime": {
+    "message": "按最近访问排序",
+    "description": "Stats text indicating time sort"
+  },
+  "noResults": {
+    "message": "未找到匹配的Tab",
+    "description": "No results message"
+  },
+  "loadError": {
+    "message": "加载失败",
+    "description": "Load error message"
+  },
+  "unnamedWindow": {
+    "message": "未命名窗口",
+    "description": "Default window name"
+  },
+  "windowLabel": {
+    "message": "窗口 $INDEX$",
+    "description": "Window label",
+    "placeholders": {
+      "index": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
+  },
+  "currentWindow": {
+    "message": "(当前)",
+    "description": "Current window indicator"
+  },
+  "tabCount": {
+    "message": "$COUNT$ 个Tab",
+    "description": "Tab count in window header",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "currentTab": {
+    "message": "当前",
+    "description": "Current tab badge"
+  },
+  "previouslyVisited": {
+    "message": "之前已访问",
+    "description": "Text when no access time recorded"
+  },
+  "pinTooltip": {
+    "message": "PIN住此标签",
+    "description": "Pin button tooltip"
+  },
+  "unpinTooltip": {
+    "message": "取消PIN",
+    "description": "Unpin button tooltip"
+  },
+  "switchError": {
+    "message": "跳转失败: ",
+    "description": "Tab switch error prefix"
+  },
+  "justNow": {
+    "message": "刚刚",
+    "description": "Relative time for less than a minute"
+  },
+  "minutesAgo": {
+    "message": "$COUNT$分钟前",
+    "description": "Relative time in minutes",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "hoursAgo": {
+    "message": "$COUNT$小时前",
+    "description": "Relative time in hours",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "yesterdayAt": {
+    "message": "昨天 $TIME$",
+    "description": "Yesterday with time",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "14:30"
+      }
+    }
+  },
+  "sunday": {
+    "message": "周日",
+    "description": "Sunday abbreviation"
+  },
+  "monday": {
+    "message": "周一",
+    "description": "Monday abbreviation"
+  },
+  "tuesday": {
+    "message": "周二",
+    "description": "Tuesday abbreviation"
+  },
+  "wednesday": {
+    "message": "周三",
+    "description": "Wednesday abbreviation"
+  },
+  "thursday": {
+    "message": "周四",
+    "description": "Thursday abbreviation"
+  },
+  "friday": {
+    "message": "周五",
+    "description": "Friday abbreviation"
+  },
+  "saturday": {
+    "message": "周六",
+    "description": "Saturday abbreviation"
+  },
+  "dayAtTime": {
+    "message": "$DAY$ $TIME$",
+    "description": "Day of week with time",
+    "placeholders": {
+      "day": {
+        "content": "$1",
+        "example": "周一"
+      },
+      "time": {
+        "content": "$2",
+        "example": "14:30"
+      }
+    }
+  },
+  "monthDay": {
+    "message": "$MONTH$月$DAY$日",
+    "description": "Month and day",
+    "placeholders": {
+      "month": {
+        "content": "$1",
+        "example": "3"
+      },
+      "day": {
+        "content": "$2",
+        "example": "15"
+      }
+    }
+  },
+  "shortcutHint": {
+    "message": "Ctrl/⌘ + Shift + T 快速打开 | ↑↓ 选择 | Enter 跳转 | P PIN | Esc 关闭",
+    "description": "Keyboard shortcut hint at bottom"
+  }
+}

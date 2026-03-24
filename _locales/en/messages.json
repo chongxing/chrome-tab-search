@@ -1,0 +1,244 @@
+{
+  "extensionName": {
+    "message": "Tab Search - Cross Window",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Quickly search and jump to any tab across all windows with time-based sorting and PIN feature",
+    "description": "Extension description"
+  },
+  "subtitle": {
+    "message": "Search and jump across windows",
+    "description": "Subtitle shown in popup header"
+  },
+  "searchPlaceholder": {
+    "message": "Search tab title or URL...",
+    "description": "Search input placeholder"
+  },
+  "sortByWindow": {
+    "message": "Window",
+    "description": "Sort by window button"
+  },
+  "sortByTime": {
+    "message": "Time",
+    "description": "Sort by time button"
+  },
+  "windowSortTooltip": {
+    "message": "Group by window",
+    "description": "Window sort button tooltip"
+  },
+  "timeSortTooltip": {
+    "message": "Sort by recent access",
+    "description": "Time sort button tooltip"
+  },
+  "loading": {
+    "message": "Loading...",
+    "description": "Loading text"
+  },
+  "loadingTabs": {
+    "message": "Loading tabs...",
+    "description": "Loading tabs text"
+  },
+  "statsWindowsAndTabs": {
+    "message": "$WINDOW_COUNT$ windows, $TAB_COUNT$ tabs",
+    "description": "Stats text for window mode",
+    "placeholders": {
+      "window_count": {
+        "content": "$1",
+        "example": "3"
+      },
+      "tab_count": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "statsResults": {
+    "message": "Found $FILTERED$ results ($TOTAL$ tabs total)",
+    "description": "Stats text when filtering",
+    "placeholders": {
+      "filtered": {
+        "content": "$1",
+        "example": "5"
+      },
+      "total": {
+        "content": "$2",
+        "example": "10"
+      }
+    }
+  },
+  "statsTotalTabs": {
+    "message": "$COUNT$ tabs total",
+    "description": "Stats text for time mode",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "statsPinned": {
+    "message": "$COUNT$ pinned",
+    "description": "Stats text for pinned count",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "statsSortedByTime": {
+    "message": "Sorted by recent access",
+    "description": "Stats text indicating time sort"
+  },
+  "noResults": {
+    "message": "No matching tabs found",
+    "description": "No results message"
+  },
+  "loadError": {
+    "message": "Failed to load",
+    "description": "Load error message"
+  },
+  "unnamedWindow": {
+    "message": "Unnamed Window",
+    "description": "Default window name"
+  },
+  "windowLabel": {
+    "message": "Window $INDEX$",
+    "description": "Window label",
+    "placeholders": {
+      "index": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
+  },
+  "currentWindow": {
+    "message": "(Current)",
+    "description": "Current window indicator"
+  },
+  "tabCount": {
+    "message": "$COUNT$ tabs",
+    "description": "Tab count in window header",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "currentTab": {
+    "message": "Current",
+    "description": "Current tab badge"
+  },
+  "previouslyVisited": {
+    "message": "Visited before",
+    "description": "Text when no access time recorded"
+  },
+  "pinTooltip": {
+    "message": "Pin this tab",
+    "description": "Pin button tooltip"
+  },
+  "unpinTooltip": {
+    "message": "Unpin",
+    "description": "Unpin button tooltip"
+  },
+  "switchError": {
+    "message": "Failed to switch: ",
+    "description": "Tab switch error prefix"
+  },
+  "justNow": {
+    "message": "Just now",
+    "description": "Relative time for less than a minute"
+  },
+  "minutesAgo": {
+    "message": "$COUNT$ min ago",
+    "description": "Relative time in minutes",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "hoursAgo": {
+    "message": "$COUNT$ hr ago",
+    "description": "Relative time in hours",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "2"
+      }
+    }
+  },
+  "yesterdayAt": {
+    "message": "Yesterday $TIME$",
+    "description": "Yesterday with time",
+    "placeholders": {
+      "time": {
+        "content": "$1",
+        "example": "14:30"
+      }
+    }
+  },
+  "sunday": {
+    "message": "Sun",
+    "description": "Sunday abbreviation"
+  },
+  "monday": {
+    "message": "Mon",
+    "description": "Monday abbreviation"
+  },
+  "tuesday": {
+    "message": "Tue",
+    "description": "Tuesday abbreviation"
+  },
+  "wednesday": {
+    "message": "Wed",
+    "description": "Wednesday abbreviation"
+  },
+  "thursday": {
+    "message": "Thu",
+    "description": "Thursday abbreviation"
+  },
+  "friday": {
+    "message": "Fri",
+    "description": "Friday abbreviation"
+  },
+  "saturday": {
+    "message": "Sat",
+    "description": "Saturday abbreviation"
+  },
+  "dayAtTime": {
+    "message": "$DAY$ $TIME$",
+    "description": "Day of week with time",
+    "placeholders": {
+      "day": {
+        "content": "$1",
+        "example": "Mon"
+      },
+      "time": {
+        "content": "$2",
+        "example": "14:30"
+      }
+    }
+  },
+  "monthDay": {
+    "message": "$MONTH$/$DAY$",
+    "description": "Month and day",
+    "placeholders": {
+      "month": {
+        "content": "$1",
+        "example": "3"
+      },
+      "day": {
+        "content": "$2",
+        "example": "15"
+      }
+    }
+  },
+  "shortcutHint": {
+    "message": "Ctrl/⌘ + Shift + T to open | ↑↓ Select | Enter Jump | P PIN | Esc Close",
+    "description": "Keyboard shortcut hint at bottom"
+  }
+}

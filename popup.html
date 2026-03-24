@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,35 +9,35 @@
 <body>
   <div class="header">
     <h1><span class="header-icon">🔍</span>Tab Search</h1>
-    <div class="subtitle">跨窗口搜索并快速跳转</div>
+    <div class="subtitle" data-i18n="subtitle">__MSG_subtitle__</div>
   </div>
 
   <div class="search-container">
     <div class="search-wrapper">
       <span class="search-icon">🔍</span>
-      <input type="text" class="search-box" id="searchInput" placeholder="搜索Tab标题或URL..." autocomplete="off">
+      <input type="text" class="search-box" id="searchInput" placeholder="__MSG_searchPlaceholder__" autocomplete="off">
     </div>
   </div>
 
   <div class="sort-controls">
-    <button class="sort-btn active" id="sortByWindow" title="按窗口分组">
+    <button class="sort-btn active" id="sortByWindow" title="__MSG_windowSortTooltip__">
       <span class="sort-icon">🪟</span>
-      <span class="sort-text">窗口</span>
+      <span class="sort-text">__MSG_sortByWindow__</span>
     </button>
-    <button class="sort-btn" id="sortByTime" title="按最近访问排序">
+    <button class="sort-btn" id="sortByTime" title="__MSG_timeSortTooltip__">
       <span class="sort-icon">🕐</span>
-      <span class="sort-text">时间</span>
+      <span class="sort-text">__MSG_sortByTime__</span>
     </button>
   </div>
 
-  <div class="stats" id="stats">正在加载...</div>
+  <div class="stats" id="stats">__MSG_loading__</div>
 
   <div class="tab-list" id="tabList">
-    <div class="loading">加载中...</div>
+    <div class="loading">__MSG_loadingTabs__</div>
   </div>
 
   <div class="shortcut-hint">
-    <kbd>Ctrl/⌘</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd> 快速打开 | ↑↓ 选择 | Enter 跳转 | Esc 关闭
+    __MSG_shortcutHint__
   </div>
 
   <script src="popup.js"></script>
