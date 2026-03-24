@@ -581,5 +581,54 @@ function setupEventListeners() {
   });
 }
 
+// Replace i18n placeholders in HTML
+function replaceI18nPlaceholders() {
+  // Replace text content in all elements
+  const elements = document.querySelectorAll('*');
+  elements.forEach(el => {
+    // Skip script elements
+    if (el.tagName === 'SCRIPT') return;
+    
+    // Replace text content
+    if (el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
+      const text = el.textContent;
+      if (text.includes('__MSG_')) {
+        const key = text.replace(/__MSG_|__/g, '');
+        const translated = chrome.i18n.getMessage(key);
+        if (translated) {
+          el.textContent = translated;
+        }
+      }
+    }
+    
+    // Replace placeholder attributes
+    if (el.hasAttribute('placeholder')) {
+      const placeholder = el.getAttribute('placeholder');
+      if (placeholder.includes('__MSG_')) {
+        const key = placeholder.replace(/__MSG_|__/g, '');
+        const translated = chrome.i18n.getMessage(key);
+        if (translated) {
+          el.setAttribute('placeholder', translated);
+        }
+      }
+    }
+    
+    // Replace title attributes
+    if (el.hasAttribute('title')) {
+      const title = el.getAttribute('title');
+      if (title.includes('__MSG_')) {
+        const key = title.replace(/__MSG_|__/g, '');
+        const translated = chrome.i18n.getMessage(key);
+        if (translated) {
+          el.setAttribute('title', translated);
+        }
+      }
+    }
+  });
+}
+
 // Initialize on load
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  replaceI18nPlaceholders();
+  init();
+});
