@@ -7,6 +7,7 @@ let windowsMap = new Map();
 let tabAccessTimes = {};
 let pinnedTabIds = new Set();
 let currentSortMode = 'window';
+let lastSearchQuery = '';  // 保存上次搜索关键字
 
 // DOM Elements
 const searchInput = document.getElementById('searchInput');
@@ -19,22 +20,39 @@ const sortByTimeBtn = document.getElementById('sortByTime');
 async function init() {
   try {
     if (chrome.storage && chrome.storage.local) {
-      const result = await chrome.storage.local.get('sortMode');
+      const result = await chrome.storage.local.get(['sortMode', 'lastSearchQuery', 'lastSelectedIndex']);
       currentSortMode = result.sortMode || 'window';
+      lastSearchQuery = result.lastSearchQuery || '';
+      selectedIndex = result.lastSelectedIndex || -1;
     } else {
       console.warn('Storage API not available, using default sort mode');
       currentSortMode = 'window';
+      lastSearchQuery = '';
+      selectedIndex = -1;
     }
     updateSortButtons();
     
     await loadTabAccessTimes();
     await loadPinnedTabs();
     await loadAllTabs();
+    
+    // 恢复上次搜索状态
+    if (lastSearchQuery) {
+      searchInput.value = lastSearchQuery;
+      filterTabs(lastSearchQuery);
+      // 恢复上次选中的索引（如果有效）
+      if (selectedIndex >= 0 && selectedIndex < filteredTabs.length) {
+        renderTabs();
+      }
+    }
+    
     setupEventListeners();
     searchInput.focus();
   } catch (error) {
     console.error('Init failed:', error);
     currentSortMode = 'window';
+    lastSearchQuery = '';
+    selectedIndex = -1;
     updateSortButtons();
     await loadAllTabs();
     setupEventListeners();
@@ -294,7 +312,18 @@ function updateStats() {
 }
 
 // Filter tabs based on search query
-function filterTabs(query) {
+async function filterTabs(query) {
+  lastSearchQuery = query;
+  
+  // 保存搜索关键字
+  try {
+    if (chrome.storage && chrome.storage.local) {
+      await chrome.storage.local.set({ lastSearchQuery: query });
+    }
+  } catch (error) {
+    console.error('Save search query failed:', error);
+  }
+  
   if (!query.trim()) {
     filteredTabs = [...allTabs];
   } else {
@@ -473,6 +502,15 @@ async function switchToTab(tabId, windowId) {
   try {
     console.log('Switching to tab:', tabId, 'in window:', windowId);
     
+    // 保存当前选中的索引，以便返回时能恢复位置
+    try {
+      if (chrome.storage && chrome.storage.local) {
+        await chrome.storage.local.set({ lastSelectedIndex: selectedIndex });
+      }
+    } catch (error) {
+      console.error('Save selected index failed:', error);
+    }
+    
     await chrome.tabs.update(tabId, { active: true });
     await chrome.windows.update(windowId, { focused: true });
     
@@ -575,6 +613,14 @@ function setupEventListeners() {
         break;
       case 'Escape':
         e.preventDefault();
+        // 清除选中索引，但保留搜索关键字
+        try {
+          if (chrome.storage && chrome.storage.local) {
+            await chrome.storage.local.set({ lastSelectedIndex: -1 });
+          }
+        } catch (error) {
+          console.error('Clear selected index failed:', error);
+        }
         window.close();
         break;
     }
