@@ -1,6 +1,9 @@
 # Backup directory
 backup/
 
+# Chrome Web Store assets (local only)
+chrome-store-assets/
+
 # macOS
 .DS_Store
 
