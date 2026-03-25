@@ -45,17 +45,22 @@
 
 ### 方式一：Chrome Web Store 安装（推荐）
 
-✅ **v1.0.4 已上线**：[Chrome Web Store - Tab Search](https://chromewebstore.google.com/detail/anegolpfjipjfddbddlmfblpdbiianka?utm_source=item-share-cb)
+✅ **v1.0.6 已上线**：[Chrome Web Store - Tab Search](https://chromewebstore.google.com/detail/anegolpfjipjfddbddlmfblpdbiianka?utm_source=item-share-cb)
 
 1. 点击上方链接访问 Chrome Web Store
 2. 点击「**添加至 Chrome**」安装
 3. 安装完成后，建议点击工具栏的 📌 图标将扩展固定
 
-⏳ **v1.0.5 审核中**：新增基于 Tab 访问时间的排序功能，正在等待 Chrome Web Store 审核通过
+> ⏳ **v1.0.7 审核中**：新增搜索状态保持功能，记住搜索关键字和选中位置，正在等待 Chrome Web Store 审核通过
+
+| 版本 | 状态 | 说明 |
+|------|------|------|
+| **v1.0.6** | ✅ 已上线 | 置顶功能 + 时间排序 |
+| **v1.0.7** | ⏳ 审核中 | 搜索状态保持 |
 
 ### 方式二：下载安装
 
-1. **下载** → [`chrome-tab-search-store-v1.0.5.zip`](./chrome-tab-search-store-v1.0.5.zip)（最新版）
+1. **下载** → [`chrome-tab-search-store-v1.0.7.zip`](./chrome-tab-search-store-v1.0.7.zip)（最新版）
 2. **解压** → 将 ZIP 解压到任意文件夹
 3. **安装** → 打开 Chrome，访问 `chrome://extensions/`
 4. **开启开发者模式** → 打开右上角开关
@@ -91,7 +96,7 @@ chrome-tab-search/
 ├── manifest.json                    # 扩展配置
 ├── popup.html / popup.js / styles.css   # 界面和逻辑
 ├── icons/                           # 图标文件
-├── chrome-tab-search-store-v1.0.5.zip   # 📦 最新版安装包
+├── chrome-tab-search-store-v1.0.7.zip   # 📦 最新版安装包
 ├── PRIVACY_POLICY.md               # 隐私政策
 └── README.md                       # 本文件
 ```
@@ -120,13 +125,13 @@ chrome-tab-search/
 
 | 版本 | 状态 | 链接 |
 |------|------|------|
-| **v1.0.4** | ✅ 已上线 | [Chrome Web Store](https://chromewebstore.google.com/detail/anegolpfjipjfddbddlmfblpdbiianka?utm_source=item-share-cb) |
-| **v1.0.5** | ⏳ 审核中 | 基于 Tab 访问时间排序功能 |
+| **v1.0.6** | ✅ 已上线 | [Chrome Web Store](https://chromewebstore.google.com/detail/anegolpfjipjfddbddlmfblpdbiianka?utm_source=item-share-cb) |
+| **v1.0.7** | ⏳ 审核中 | 搜索状态保持功能 |
 
-### v1.0.5 新功能预览
-- 🕐 **按最后访问时间排序** - 自动记录并排序你查看过的 Tab
-- 🔥 **智能时间分组** - "刚刚"、"今天"、"昨天"、"更早"
-- 🌐 **跨窗口时间整合** - 所有窗口的 Tab 按访问时间混合排序
+### v1.0.7 新功能预览
+- 🔍 **搜索状态保持** - 记住搜索关键字和选中位置
+- 🔄 **无缝浏览** - 跳转后返回可继续之前的搜索
+- 💡 **智能记忆** - 关闭后重新打开自动恢复搜索状态
 
 ---
 
@@ -158,4 +163,4 @@ MIT License © [chongxing](https://github.com/chongxing)
 
 Made with ❤️ for multi-window users
 
-<!-- Updated: 2026-03-17 -->
+<!-- Updated: 2026-03-25 -->
