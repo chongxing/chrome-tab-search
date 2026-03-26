@@ -58,13 +58,15 @@
 | **v1.0.6** | ✅ 已上线 | 置顶功能 + 时间排序 |
 | **v1.0.7** | ⏳ 审核中 | 搜索状态保持 |
 
-### 方式二：下载安装
+### 方式二：源码安装
 
-1. **下载** → [`chrome-tab-search-store-v1.0.7.zip`](./chrome-tab-search-store-v1.0.7.zip)（最新版）
-2. **解压** → 将 ZIP 解压到任意文件夹
-3. **安装** → 打开 Chrome，访问 `chrome://extensions/`
-4. **开启开发者模式** → 打开右上角开关
-5. **加载扩展** → 点击「**加载已解压的扩展程序**」，选择解压后的文件夹
+1. **克隆仓库** → 
+   ```bash
+   git clone https://github.com/chongxing/chrome-tab-search.git
+   ```
+2. **安装** → 打开 Chrome，访问 `chrome://extensions/`
+3. **开启开发者模式** → 打开右上角开关
+4. **加载扩展** → 点击「**加载已解压的扩展程序**」，选择克隆后的 `chrome-tab-search` 文件夹
 
 ---
 
@@ -96,7 +98,6 @@ chrome-tab-search/
 ├── manifest.json                    # 扩展配置
 ├── popup.html / popup.js / styles.css   # 界面和逻辑
 ├── icons/                           # 图标文件
-├── chrome-tab-search-store-v1.0.7.zip   # 📦 最新版安装包
 ├── PRIVACY_POLICY.md               # 隐私政策
 └── README.md                       # 本文件
 ```
